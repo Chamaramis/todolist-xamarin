@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Agranillo.ToDoList.App.Views.MainPage"
+             Title="{Binding Title}"
+             xmlns:vm="clr-namespace:Agranillo.ToDoList.App.ViewModels;assembly=Agranillo.ToDoList.App"
+             xmlns:models="clr-namespace:Agranillo.ToDoList.App.Models;assembly=Agranillo.ToDoList.App"
+             x:DataType="vm:MainPageViewModel"
+             x:Name="page"
+             xmlns:extensions="clr-namespace:Agranillo.ToDoList.App.UI.MarkupExtensions;assembly=Agranillo.ToDoList.App">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Command="{Binding AddItem}" Text="{extensions:Localization ResourceKey='MainPage.Page.New'}"></ToolbarItem>
+    </ContentPage.ToolbarItems>
+    <ContentPage.Content>
+        <ScrollView HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+            <ListView SelectionMode="None" ItemsSource="{Binding ToDoList}" IsRefreshing="{Binding IsRefreshing}" HasUnevenRows="True" IsPullToRefreshEnabled="True" RefreshCommand="{Binding Refresh}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout Padding="10, 5" x:DataType="models:ToDoItem" Orientation="Horizontal" HorizontalOptions="FillAndExpand" VerticalOptions="Start">
+                                <StackLayout Orientation="Vertical" HorizontalOptions="StartAndExpand" VerticalOptions="Start">
+                                    <Label VerticalOptions="Center" Text="{Binding Title}" FontAttributes="Bold" FontSize="16"></Label>
+                                    <Label VerticalOptions="Center" Text="{Binding Description}" FontSize="14"></Label>
+                                </StackLayout>
+                                <Image Source="trash.png" HeightRequest="32" WidthRequest="32" HorizontalOptions="End" VerticalOptions="Center">
+                                    <Image.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding Source={x:Reference page}, Path=BindingContext.DeleteItem}" CommandParameter="{Binding .}"></TapGestureRecognizer>
+                                    </Image.GestureRecognizers>
+                                </Image>
+                                <StackLayout.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={x:Reference page}, Path=BindingContext.EditItem}" CommandParameter="{Binding .}">
+                                    </TapGestureRecognizer>
+                                </StackLayout.GestureRecognizers>
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>
